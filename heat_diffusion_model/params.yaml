@@ -1,0 +1,17 @@
+qm : 0.035 # background mantle heat flux [W/m2]
+hr : 8000 # e-fold depth for radiogenic heating [m]
+rho_crust : 2600 # density of the crust [kg/m3]
+kc : 2.5 # thermal conductivity of the crust [W/(m K)]
+ki : 2.1 # average thermal conductivity of the ice sheet [W/(m K)]
+cp_crust : 800 # specific heat capacity of the crust [J/(kg K)]
+Lf : 310000 # Latent heat of fusion for crustal rocks [J/kg]
+Tliq : 1373 # Liquidus temperature of crustal rocks [K]
+Tmelt : 273 # Melting temperature of ice [K]
+A : 42500000 # constant for Arrhenius law for viscosity
+Bmu : 8.31 # constant for Arrhenius law for viscosity
+G : 141000 # constant for Arrhenius law for viscosity
+Eeff : 10000000000 # Young's Modulus
+Tbase : 273 # Initial temperature at the base of the ice sheet [K]
+Tsurf : 238 # Temperature at the surface of the ice sheet [K]
+tf : 41000 # Timescale of Deglaciation
+efficiency : 0.01 # efficiency of heating from magma. heat lost to water advection and volcanism 
