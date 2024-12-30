@@ -8,7 +8,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.metrics import mean_squared_error
 
 data = pd.read_excel('computerlab_data.xlsx')
-# print(data.head())
+print(data.head())
 
 time = data['date (year)']
 
