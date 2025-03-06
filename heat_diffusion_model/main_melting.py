@@ -29,6 +29,7 @@ chamber_depth = 5e3 # depth to the magma chamber
 dyke_length = L_crust-chamber_depth # length of the dyke from the base of the crust up
 dz = 0.5*(1+np.tanh(10*(z-chamber_depth)/L_crust)) # shape of magmatic heating for excess melt injection
 
+# np.savetxt('depth.csv',z,delimiter = ",")
 
 #Create Array Variables
 rho_cp = parameters['rho_crust']*parameters['cp_crust'] # density and heat capacity multiplied together to make future math faster during integration
@@ -37,17 +38,20 @@ rho_cp = parameters['rho_crust']*parameters['cp_crust'] # density and heat capac
 
 kappa = parameters['kc']/(parameters['rho_crust']*parameters['cp_crust']) # heat diffusion in the crust
 tau_d = (L_crust/2)**2/kappa # diffusion timescale through half of the crust
-
+# print(t[np.argmin(np.abs(t/tau_d - 1.8))]/year)
+# print(tau_d/year)
 #%%
 
 #Percent extra mantle heating
-magnitude_above = 152   # factor of mantle heat flux above the background that dqm will reach at maximum 
-inject_period = 1e3 * year  # period of magma injection in seconds
+magnitude_above = 400   # factor of mantle heat flux above the background that dqm will reach at maximum 
+inject_period = 2e7 * year  # period of magma injection in seconds
 delta_qm = parameters['qm'] + parameters['qm']*magnitude_above * (np.sin(2 * np.pi * t /inject_period))
 # heat flux cannot be negative so make all negative values 0
 for i in range(len(delta_qm)):
         if delta_qm[i] < 0:
                 delta_qm[i] = 0
+
+print(np.max(delta_qm))
 
 # fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
 # ax.plot(t/tau_d,delta_qm,color = 'black')
@@ -55,7 +59,7 @@ for i in range(len(delta_qm)):
 # ax.set_xlabel('Time (t/$T_d$)')
 # # ax.hlines(1e0,4,6)
 # fig.tight_layout()
-# #%%
+#%%
 
 # Ice sheet surface flux modulation 
 # The height of the ice sheet through time. If constant, set constant = True, if  time variant, set constant = False
@@ -95,6 +99,8 @@ print('saving...')
 # np.savetxt('collapse_experiments_100collapse_200recurence_temp.csv',T_DF[np.argwhere(z == 5000)[0][0],:],delimiter = ',')
 # np.savetxt('collapse_experiments_100collapse_200recurence_deb.csv',Un[np.argwhere(z == 5000)[0][0],:],delimiter = ',')
 
+np.savetxt('T_geotherm_sweet_spot.csv',np.array([z,T_DF[:,np.argmin(np.abs(t/tau_d - 1.1))],T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))]]).T,delimiter=',')
+
 # calculate ratio of eruptive:storage time along with production rate, min De, and max De
 print('eruptive/storage ratio')
 eruptive = 0 
@@ -109,8 +115,9 @@ for i in Un[np.argwhere(z == 5000)[0][0],np.argmin(np.abs(t - 4*tau_d)):np.argmi
         storage += 1 # time steps for one heating cycle spent in the storage regime
 
 # print(f'ratio = {eruptive/storage}') # ratio of eruptive vs storage
-# print(f'max mass rate = {np.max(Qvol_total*(year/1e9))}') # max rate of magma influx into the crust
-# print(f'average mass rate = {np.mean(Qvol_total*(year/1e9))}') # average rate of magma influx into the crust
+print(f'max mass rate = {np.max(Qvol_total*(year/1e9))}') # max rate of magma influx into the crust
+print(f'average mass rate = {np.mean(Qvol_total*(year/1e9))}') # average rate of magma influx into the crust
+print(f'Max delta_qm = {np.max(delta_qm)}')
 # print(f'Min De = {np.min(Un[np.argwhere(z == 5000)[0][0],np.argmin(np.abs(t - 4*tau_d)):np.argmin(np.abs(t-(6*tau_d)))])}')
 # print(f'Max De = {np.max(Un[np.argwhere(z == 5000)[0][0],np.argmin(np.abs(t - 4*tau_d)):np.argmin(np.abs(t-(6*tau_d)))])}')
 
@@ -132,10 +139,10 @@ print('plotting...')
 # ax.hlines(1e0,4,6)
 # fig.tight_layout()
 
-# fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
-# ax.plot(T_DF[:,0],z/1000)
-# ax.plot(T_DF[:,-1],z/1000)
-# ax.invert_yaxis()
+fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
+ax.plot(T_DF[:,np.argmin(np.abs(t/tau_d - 1.1))],z/1000)
+ax.plot(T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))],z/1000)
+ax.invert_yaxis()
 # ax[1].semilogx(Un[:,-1],z/1000)
 # ax[1].invert_yaxis()
 # ax[1].vlines(1e0,0,30)
@@ -146,6 +153,8 @@ print('plotting...')
 
 fig,ax = plt.subplots(nrows = 2,ncols = 1,figsize = (10,7))
 ax[0].plot(t/tau_d,T_DF[np.argwhere(z == 5000)[0][0],:],color = 'black')
+ax[0].vlines(1.1,350,550)
+ax[0].vlines(3.4,350,550)
 # ax[1].semilogy(t/tau_d,visc[np.argwhere(z == 5000)[0][0],:],color = 'black')
 ax[1].semilogy(t/tau_d,Un[np.argwhere(z == 5000)[0][0],:],color = 'black')
 fig.suptitle('Variations in Insulation at the top of the Crust')
