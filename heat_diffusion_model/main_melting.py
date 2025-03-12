@@ -44,14 +44,14 @@ tau_d = (L_crust/2)**2/kappa # diffusion timescale through half of the crust
 
 #Percent extra mantle heating
 magnitude_above = 400   # factor of mantle heat flux above the background that dqm will reach at maximum 
-inject_period = 2e7 * year  # period of magma injection in seconds
+inject_period = tau_d #2e7 * year  # period of magma injection in seconds
 delta_qm = parameters['qm'] + parameters['qm']*magnitude_above * (np.sin(2 * np.pi * t /inject_period))
 # heat flux cannot be negative so make all negative values 0
 for i in range(len(delta_qm)):
         if delta_qm[i] < 0:
                 delta_qm[i] = 0
 
-print(np.max(delta_qm))
+# print(np.max(delta_qm))
 
 # fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
 # ax.plot(t/tau_d,delta_qm,color = 'black')
@@ -99,7 +99,9 @@ print('saving...')
 # np.savetxt('collapse_experiments_100collapse_200recurence_temp.csv',T_DF[np.argwhere(z == 5000)[0][0],:],delimiter = ',')
 # np.savetxt('collapse_experiments_100collapse_200recurence_deb.csv',Un[np.argwhere(z == 5000)[0][0],:],delimiter = ',')
 
-np.savetxt('T_geotherm_sweet_spot.csv',np.array([z,T_DF[:,np.argmin(np.abs(t/tau_d - 1.1))],T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))]]).T,delimiter=',')
+np.savetxt('T_geotherm_red.csv',np.array([z,T_DF[:,np.argmin(np.abs(t/tau_d - 1))],T_DF[:,np.argmin(np.abs(t/tau_d - 3.25))],T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))]]).T,delimiter=',')
+# np.savetxt('T_geotherm_blue.csv',np.array([z,T_DF[:,np.argmin(np.abs(t/tau_d - 3.25))],T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))]]).T,delimiter=',')
+# np.savetxt('T_geotherm_black.csv',np.array([z,T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))],T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))]]).T,delimiter=',')
 
 # calculate ratio of eruptive:storage time along with production rate, min De, and max De
 print('eruptive/storage ratio')
@@ -132,17 +134,33 @@ print('plotting...')
 # ax.hlines(1e0,4,6)
 # fig.tight_layout()
 
-# fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
-# ax.semilogy(t/tau_d,delta_qm,color = 'black')
-# ax.set_title('Deborah Number')
-# ax.set_xlabel('Time (t/$T_d$)')
+fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
+ax.plot(t/tau_d,Qvol_total*(year/1e9),color = 'black')
+ax.vlines(1,0,0.06,color = 'r')
+ax.vlines(3.25,0,0.06,color = 'b')
+ax.vlines(3.4,0,0.06,color = 'k')
+ax.set_ylabel('Magma influx (km^3/year)')
+ax.set_xlabel('Time (t/$T_d$)')
 # ax.hlines(1e0,4,6)
-# fig.tight_layout()
+fig.tight_layout()
 
 fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
-ax.plot(T_DF[:,np.argmin(np.abs(t/tau_d - 1.1))],z/1000)
-ax.plot(T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))],z/1000)
+ax.plot(t/tau_d,delta_qm,color = 'black')
+ax.vlines(1,0,15,color = 'r')
+ax.vlines(3.25,0,15,color = 'b')
+ax.vlines(3.4,0,15,color = 'k')
+ax.set_ylabel('$\\delta q_m$ (W/m^2)')
+ax.set_xlabel('Time (t/$T_d$)')
+# ax.hlines(1e0,4,6)
+fig.tight_layout()
+
+fig,ax = plt.subplots(nrows = 1,ncols = 1,figsize = (10,7))
+ax.plot(T_DF[:,np.argmin(np.abs(t/tau_d - 1))],z/1000,color = 'r')
+ax.plot(T_DF[:,np.argmin(np.abs(t/tau_d - 3.25))],z/1000,color = 'b')
+ax.plot(T_DF[:,np.argmin(np.abs(t/tau_d - 3.4))],z/1000,color = 'k')
 ax.invert_yaxis()
+ax.set_ylabel('Depth (km)')
+ax.set_xlabel('Temperature (K)')
 # ax[1].semilogx(Un[:,-1],z/1000)
 # ax[1].invert_yaxis()
 # ax[1].vlines(1e0,0,30)
@@ -153,8 +171,9 @@ ax.invert_yaxis()
 
 fig,ax = plt.subplots(nrows = 2,ncols = 1,figsize = (10,7))
 ax[0].plot(t/tau_d,T_DF[np.argwhere(z == 5000)[0][0],:],color = 'black')
-ax[0].vlines(1.1,350,550)
-ax[0].vlines(3.4,350,550)
+ax[0].vlines(1,350,610,color = 'r')
+ax[0].vlines(3.25,350,610,color = 'b')
+ax[0].vlines(3.4,350,610,color = 'k')
 # ax[1].semilogy(t/tau_d,visc[np.argwhere(z == 5000)[0][0],:],color = 'black')
 ax[1].semilogy(t/tau_d,Un[np.argwhere(z == 5000)[0][0],:],color = 'black')
 fig.suptitle('Variations in Insulation at the top of the Crust')
