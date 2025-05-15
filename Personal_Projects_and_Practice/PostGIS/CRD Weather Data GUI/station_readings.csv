@@ -1,0 +1,10 @@
+﻿Native ID,Air temperature,Precipitation,Rain,Relative Humidity,Snow Depth,Snow Water Equivalent,Solar Radiation,Wind Direction,Wind Speed
+FW001,1,1,1,1,1,0,1,1,1
+FW003,1,0,1,1,0,0,0,1,1
+FW004,1,1,1,1,1,1,0,1,1
+FW009,1,1,1,1,1,0,0,1,1
+FW007,1,1,1,1,1,0,0,1,1
+FW005,1,0,1,1,0,0,0,0,0
+FW008,1,0,1,1,1,0,0,1,1
+HY031,1,1,1,1,0,0,0,1,1
+FW006,1,1,1,1,1,1,0,1,1
