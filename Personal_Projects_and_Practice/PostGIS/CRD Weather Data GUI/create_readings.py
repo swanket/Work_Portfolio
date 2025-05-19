@@ -1,35 +1,36 @@
+#%%
 import os
 import pandas as pd
 import psycopg2
 
 # --- Config ----------------------------------------------------------------
-CSV_FOLDER = '/path/to/your/csv_files/'  # directory with station CSVs
+CSV_FOLDER = '/Users/sean/Work_Portfolio/Personal_Projects_and_Practice/PostGIS/CRD Weather Data GUI/stations'  # directory with station CSVs
 DB_CONFIG = {
-    'dbname': 'your_db',
-    'user': 'your_user',
-    'password': 'your_password',
+    'dbname': 'CRDclimate',
+    'user': 'postgres',
+    # 'password': '',
     'host': 'localhost',
     'port': 5432
 }
 
-# --- Normalize headers ----------------------------------------------------
-rename_map = {
-    'air temp': 'air_temperature',
-    'air temperature': 'air_temperature',
-    'wind speed': 'wind_speed',
-    'wind dir': 'wind_direction',
-    'humidity (%)': 'relative_humidity',
-    'humidity': 'relative_humidity',
-    'swe': 'snow_water_equivalent',
-    'solar rad': 'solar_radiation',
-    'rainfall': 'rain',
-    'precip': 'precipitation',
-}
+# # --- Normalize headers ----------------------------------------------------
+# rename_map = {
+#     'air temp': 'air_temperature',
+#     'air temperature': 'air_temperature',
+#     'wind speed': 'wind_speed',
+#     'wind dir': 'wind_direction',
+#     'humidity (%)': 'relative_humidity',
+#     'humidity': 'relative_humidity',
+#     'swe': 'snow_water_equivalent',
+#     'solar rad': 'solar_radiation',
+#     'rainfall': 'rain',
+#     'precip': 'precipitation',
+# }
 
 # --- Connect to DB --------------------------------------------------------
 conn = psycopg2.connect(**DB_CONFIG)
 cursor = conn.cursor()
-
+#%%
 # Fetch variable_id mapping
 cursor.execute("SELECT name, variable_id FROM variables;")
 var_map = dict(cursor.fetchall())
@@ -48,8 +49,8 @@ for filename in os.listdir(CSV_FOLDER):
     df = pd.read_csv(file_path)
 
     # Clean & normalize column names
-    df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
-    df.rename(columns=rename_map, inplace=True)
+    # df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
+    # df.rename(columns=rename_map, inplace=True)
 
     if 'record_date' not in df.columns:
         print(f"Skipping {filename}: missing 'record_date'")
