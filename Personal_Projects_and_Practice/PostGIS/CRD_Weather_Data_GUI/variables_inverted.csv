@@ -1,4 +1,0 @@
-variable,WindSpeed,SolarRadiation,SnowWaterEquivalent,BarometricPressure,Rain,Precipitation,RelativeHumidity,SnowDepth,WindDirection,AirTemperature
- standard_name, wind_speed, solar_irradiance, lwe_thickness_of_surface_snow_amount, air_pressure, rainfall_amount, lwe_thickness_of_precipitation_amount, relative_humidity, surface_snow_thickness, wind_from_direction, air_temperature
- cell_method, time: point, time: point, time: point, time: point, time: sum, time: sum, time: point, time: point, time: point, time: point
- unit, kph, W/m2, mm, hPa, mm, mm, percent, m, degrees, celsius
